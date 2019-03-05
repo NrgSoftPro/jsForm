@@ -1,0 +1,19 @@
+{
+  "name": "@nrg/form",
+  "version": "1.0.0-beta.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NrgSoftPro/jsForm.git"
+  },
+  "author": "NrgSoft",
+  "license": "MIT",
+  "description": "@nrg/form",
+  "bugs": {
+    "url": "https://github.com/NrgSoftPro/jsForm/issues"
+  },
+  "homepage": "https://github.com/NrgSoftPro/jsForm",
+  "dependencies": {
+    "@nrg/core": "^1.0.0-beta.1"
+  }
+}
