@@ -14,7 +14,7 @@ module.exports = class extends Component {
     let hasErrors = false
 
     for (const element of this) {
-      if (element.hasError) {
+      if (element.hasError && !hasErrors) {
         hasErrors = true
       }
     }
@@ -22,51 +22,16 @@ module.exports = class extends Component {
     return hasErrors
   }
 
-  set errorMessages (errorMessages) {
+  get values () {
+    const values = {}
     for (const element of this) {
-      element.errorMessage = errorMessages[element.name] ? errorMessages[element.name] : null
-    }
-  }
-
-  addElement (element) {
-    this[elements].add(element)
-
-    return this
-  }
-
-  deleteElement (element) {
-    this[elements].delete(element)
-
-    return this
-  }
-
-  hasElement (name) {
-    for (const element of this) {
-      if (element.name === name) {
-        return true
-      }
+      values[element.name] = element.filter()
     }
 
-    return false
+    return values
   }
 
-  getElement (name) {
-    for (const element of this) {
-      if (element.name === name) {
-        return element
-      }
-    }
-  }
-
-  reset () {
-    for (const element of this) {
-      element.reset()
-    }
-
-    return this
-  }
-
-  populate (data) {
+  set values (data) {
     for (const element of this) {
       if (undefined !== data[element.name]) {
         element.value = data[element.name]
@@ -76,22 +41,41 @@ module.exports = class extends Component {
     return this
   }
 
-  serialize () {
-    const data = {}
-
+  get errorMessages () {
+    const errors = {}
     for (const element of this) {
-      data[element.name] = element.filter()
+      errors[element.name] = element.errorMessage
     }
 
-    return data
+    return errors
   }
 
-  focus () {
+  get errors () {
+    const errors = {}
     for (const element of this) {
-      if (element.focus) {
-        element.focus()
-        break
+      errors[element.name] = element.error
+    }
+
+    return errors
+  }
+
+  set errors (errors) {
+    for (const element of this) {
+      if (undefined !== errors[element.name]) {
+        element.error = errors[element.name]
       }
+    }
+  }
+
+  addElement (element) {
+    this[elements].add(element)
+
+    return this
+  }
+
+  reset () {
+    for (const element of this) {
+      element.reset()
     }
 
     return this

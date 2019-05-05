@@ -8,28 +8,17 @@ module.exports = class extends Component {
   _constructor (...args) {
     this[filters] = new Set()
     this[validators] = new Set()
+    this.errorMessage = null
 
     super._constructor(...args)
   }
 
   get hasError () {
-    const
-      value = this.filter(),
-      result = this.validate(value)
-
-    if (true === result) {
-      this.errorMessage = null
-
-      return false
-    }
-
-    this.errorMessage = this.t ? this.t(result) : result.toString()
-
-    return true
+    return !this.validate()
   }
 
-  onSetErrorMessage ({value}) {
-    this.isValid = undefined === value ? undefined : !value
+  get error () {
+    return this.errorMessage ? this.errorMessage.toString() : null
   }
 
   addFilter (filter) {
@@ -39,7 +28,6 @@ module.exports = class extends Component {
   }
 
   addValidator (validator) {
-    validator.element = this
     this[validators].add(validator)
 
     return this
@@ -54,10 +42,14 @@ module.exports = class extends Component {
     return value
   }
 
-  validate (value) {
+  validate () {
+    const value = this.filter()
+
     for (const validator of this[validators]) {
       if (!validator.isValid(value)) {
-        return validator.errorMessage
+        this.errorMessage = validator.errorMessage
+
+        return false
       }
     }
 
@@ -71,7 +63,6 @@ module.exports = class extends Component {
   reset () {
     this.resetValue()
     this.errorMessage = undefined
-    this.isValid = undefined
 
     return this
   }
